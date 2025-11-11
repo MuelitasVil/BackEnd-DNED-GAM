@@ -2,7 +2,7 @@
 import httpx
 from app.configuration.settings import settings
 from app.domain.dtos.organization.headquarters_dto import HeadquartersDTO
-from app.domain.dtos.organization.email_dto import EmailListDTO
+from app.domain.dtos.organization.email_dto import EmailDTO
 from typing import List
 
 base_url = settings.DNED_ORGANIZATION
@@ -37,7 +37,7 @@ class HeadquartersClient:
     @staticmethod
     async def fetch_email_list_of_headquarters(
         cod_headquarters: str, cod_period: str
-    ) -> List[EmailListDTO]:
+    ) -> List[EmailDTO]:
         """Obtiene la lista de correos electrónicos de
         un headquarter para un periodo específico."""
         url = (
@@ -48,4 +48,4 @@ class HeadquartersClient:
             response = await client.get(url)
             response.raise_for_status()
             data = response.json()
-            return [EmailListDTO(**email) for email in data]
+            return [EmailDTO(**email) for email in data]

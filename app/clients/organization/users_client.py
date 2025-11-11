@@ -4,19 +4,19 @@ from app.configuration.settings import settings
 from app.domain.dtos.organization.users_dto import (
     UnitUnalDTO
 )
-
+from typing import List
 base_url = settings.DNED_ORGANIZATION
 
 
 class UserOrganizationClient:
 
     @staticmethod
-    async def fetch_users() -> UnitUnalDTO:
+    async def fetch_users() -> List[UnitUnalDTO]:
         url = f"http://{base_url}/users_unal/"
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
             response.raise_for_status()
-            return UnitUnalDTO(**response.json())
+            return [UnitUnalDTO(**user) for user in response.json()]
 
     @staticmethod
     async def fetch_user_by_email(email_unal: str) -> UnitUnalDTO:

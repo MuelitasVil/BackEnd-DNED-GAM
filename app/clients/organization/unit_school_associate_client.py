@@ -20,7 +20,7 @@ class UnitSchoolAssociateClient:
             f"?start={start}&limit={limit}"
         )
         async with httpx.AsyncClient() as client:
-            response = await client.get(url)
+            response = await client.get(url, follow_redirects=True)
             response.raise_for_status()
             data = response.json()
             return [UnitSchoolAssociateDTO(**assoc) for assoc in data]

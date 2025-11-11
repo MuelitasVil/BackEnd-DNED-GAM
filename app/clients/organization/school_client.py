@@ -35,9 +35,12 @@ class SchoolClient:
         cod_school: str,
         cod_period: str
     ) -> List[EmailDTO]:
-        url = f"http://{base_url}/get-email-list/{cod_school}/{cod_period}"
-        async with httpx.AsyncClient() as client:
+        url = f"http://{base_url}/schools/get-email-list/{cod_school}/{cod_period}"
+        async with httpx.AsyncClient(timeout=httpx.Timeout(30.0)) as client:
             response = await client.get(url)
             response.raise_for_status()
             data = response.json()
-            return [EmailDTO(**email) for email in data]
+            print(data)
+            return [EmailDTO(
+                    email=email[0], role=email[1]
+                    ) for email in data]

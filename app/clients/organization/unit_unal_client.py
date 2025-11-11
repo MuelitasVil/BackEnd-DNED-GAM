@@ -39,8 +39,10 @@ class UnitUnalClient:
     ) -> list[EmailDTO]:
         """Obtiene la lista de correos electrónicos de una
         unidad para un periodo específico."""
-        url = f"http://{base_url}/get-email-list/{cod_unit}/{cod_period}"
+        url = f"http://{base_url}/units_unal/get-email-list/{cod_unit}/{cod_period}"
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
             response.raise_for_status()
-            return [EmailDTO(**item) for item in response.json()]
+            return [EmailDTO(
+                    email=email[0], role=email[1]
+                    ) for email in response.json()]

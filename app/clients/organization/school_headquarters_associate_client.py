@@ -20,7 +20,7 @@ class SchoolHeadquartersAssociateClient:
             f"?start={start}&limit={limit}"
         )
         async with httpx.AsyncClient() as client:
-            response = await client.get(url)
+            response = await client.get(url, follow_redirects=True)
             response.raise_for_status()
             data = response.json()
             return [sch(**assoc) for assoc in data]
@@ -35,8 +35,10 @@ class SchoolHeadquartersAssociateClient:
             f"http://{base_url}/school_headquarters_associates/"
             f"{cod_school}/{cod_headquarters}/{cod_period}"
         )
+        print(url)
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
             response.raise_for_status()
             data = response.json()
+            print(data)
             return sch(**data)

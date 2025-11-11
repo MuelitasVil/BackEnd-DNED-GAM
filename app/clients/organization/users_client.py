@@ -1,6 +1,9 @@
 # app/clients/organization_client.py
 import httpx
 from app.configuration.settings import settings
+from app.domain.dtos.organization.users_dto import (
+    UnitUnalDTO
+)
 
 base_url = settings.DNED_ORGANIZATION
 
@@ -8,17 +11,17 @@ base_url = settings.DNED_ORGANIZATION
 class UserOrganizationClient:
 
     @staticmethod
-    async def fetch_users() -> dict:
+    async def fetch_users() -> UnitUnalDTO:
         url = f"http://{base_url}/users_unal/"
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
             response.raise_for_status()
-            return response.json()
+            return UnitUnalDTO(**response.json())
 
     @staticmethod
-    async def fetch_user_by_email(email_unal: str) -> dict:
+    async def fetch_user_by_email(email_unal: str) -> UnitUnalDTO:
         url = f"http://{base_url}/users_unal/{email_unal}"
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
             response.raise_for_status()
-            return response.json()
+            return UnitUnalDTO(**response.json())

@@ -1,6 +1,10 @@
 # app/clients/school_headquarters_associate_client.py
 import httpx
 from app.configuration.settings import settings
+from app.domain.dtos.organization.school_headquarters_associate_dto import (
+    SchoolHeadquartersAssociateDTO as sch
+)
+from typing import List
 
 base_url = settings.DNED_ORGANIZATION
 
@@ -8,11 +12,9 @@ base_url = settings.DNED_ORGANIZATION
 class SchoolHeadquartersAssociateClient:
 
     @staticmethod
-    async def fetch_associations(start: int = 0, limit: int = 100) -> list:
-        """
-        Obtiene la lista de asociaciones entre escuelas y headquarters
-        con paginación.
-        """
+    async def fetch_associations(
+        start: int = 0, limit: int = 100
+    ) -> List[sch]:
         url = (
             f"http://{base_url}/school_headquarters_associates"
             f"?start={start}&limit={limit}"
@@ -20,16 +22,15 @@ class SchoolHeadquartersAssociateClient:
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
             response.raise_for_status()
-            return response.json()
+            data = response.json()
+            return [sch(**assoc) for assoc in data]
 
     @staticmethod
     async def fetch_association_by_id(
         cod_school: str,
         cod_headquarters: str,
         cod_period: str,
-    ) -> dict:
-        """Obtiene una asociación específica entre una escuela y un
-        headquarters y un periodo."""
+    ) -> sch:
         url = (
             f"http://{base_url}/school_headquarters_associates/"
             f"{cod_school}/{cod_headquarters}/{cod_period}"
@@ -37,4 +38,5 @@ class SchoolHeadquartersAssociateClient:
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
             response.raise_for_status()
-            return response.json()
+            data = response.json()
+            return sch(**data)

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class SchoolHeadquartersAssociateInput(BaseModel):
+class SchoolHeadquartersAssociateDTO(BaseModel):
     cod_school: str
     cod_headquarters: str
     cod_period: str

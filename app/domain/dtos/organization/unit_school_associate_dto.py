@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class UserUnitAssociateInput(BaseModel):
-    email_unal: str
+class UnitSchoolAssociateDTO(BaseModel):
     cod_unit: str
+    cod_school: str
     cod_period: str

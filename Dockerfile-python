@@ -1,0 +1,39 @@
+FROM python:3.11-slim AS development
+
+WORKDIR /app
+
+# Update pip
+RUN pip install --upgrade pip
+
+# Copy resources
+COPY ./app /app
+
+# Install requirements (dev)
+RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+#RUN pip install --no-cache-dir --upgrade -r /app/requirements-dev.txt
+
+# Default command for development
+CMD ["fastapi", "dev", "main.py", "--host", "0.0.0.0", "--port", "8001"]
+
+# Expose port
+EXPOSE 8000
+
+
+FROM python:3.11-slim AS production
+
+WORKDIR /app
+
+# Update pip
+RUN pip install --upgrade pip
+
+# Copy resources
+COPY ./app /app
+
+# Install requirements (prod)
+RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+
+# Default command for production
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001"]
+
+# Expose port
+EXPOSE 8001

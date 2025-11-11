@@ -1,8 +1,8 @@
 # app/clients/organization_client.py
 import httpx
-from app.configuration.config import config
+from app.configuration.settings import settings
 
-base_url = config.DNED_ORGANIZATION
+base_url = settings.DNED_ORGANIZATION
 
 
 class UserOrganizationClient:

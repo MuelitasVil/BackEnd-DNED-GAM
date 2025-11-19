@@ -16,6 +16,21 @@ async def test_gam_connection():
 async def create_gam_user(email: str):
     try:
         result = gam_service.GamService.crear_usuario(email)
-        return {"detail": f"User creation attempted for {email}", "output": result}
+        return {
+            "detail": f"User creation attempted for {email}",
+            "output": result
+            }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/user-info/{email}")
+async def get_gam_user_info(email: str):
+    try:
+        result = gam_service.GamService().get_usuario_info(email)
+        return {
+            "detail": f"User info retrieval attempted for {email}",
+            "output": result
+            }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

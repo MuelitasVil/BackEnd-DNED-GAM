@@ -40,3 +40,14 @@ class GamService:
         else:
             self.logger.error(f"Failed to create user {email}.")
             return False
+
+    def get_usuario_info(self, email: str) -> str:
+        """Obtiene información del usuario utilizando GAM"""
+        command = ['gam', 'info', 'user', email]
+        result = self._call_gam_command(command)
+        if result.returncode == 0:
+            self.logger.info(f"User info for {email} retrieved successfully.")
+            return result.stdout
+        else:
+            self.logger.error(f"Failed to retrieve info for user {email}.")
+            return ""

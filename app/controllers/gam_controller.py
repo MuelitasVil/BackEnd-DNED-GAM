@@ -7,7 +7,7 @@ router = APIRouter(prefix="/gam", tags=["GAM"])
 @router.get("/test-connection")
 async def test_gam_connection():
     try:
-        result = gam_service.GamService.test_connection()
+        result = gam_service.GamService().test_connection()
         return {"detail": "GAM connection successful", "output": result}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

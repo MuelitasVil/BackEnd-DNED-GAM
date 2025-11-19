@@ -51,3 +51,25 @@ class GamService:
         else:
             self.logger.error(f"Failed to retrieve info for user {email}.")
             return ""
+
+    def create_group(self, group_email: str) -> bool:
+        """Crea un grupo utilizando GAM, dado su correo electrónico"""
+        command = ['gam', 'create', 'group', group_email]
+        result = self._call_gam_command(command)
+        if result.returncode == 0:
+            self.logger.info(f"Group {group_email} created successfully.")
+            return True
+        else:
+            self.logger.error(f"Failed to create group {group_email}.")
+            return False
+
+    def delete_group(self, group_email: str) -> bool:
+        """Elimina un grupo utilizando GAM, dado su correo electrónico"""
+        command = ['gam', 'delete', 'group', group_email]
+        result = self._call_gam_command(command)
+        if result.returncode == 0:
+            self.logger.info(f"Group {group_email} deleted successfully.")
+            return True
+        else:
+            self.logger.error(f"Failed to delete group {group_email}.")
+            return False

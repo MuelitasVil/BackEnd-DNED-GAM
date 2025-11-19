@@ -12,6 +12,7 @@ async def test_gam_connection():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @router.post("/create-user/{email}")
 async def create_gam_user(email: str):
     try:
@@ -30,6 +31,30 @@ async def get_gam_user_info(email: str):
         result = gam_service.GamService().get_usuario_info(email)
         return {
             "detail": f"User info retrieval attempted for {email}",
+            "output": result
+            }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/create-group/{group_email}")
+async def create_gam_group(group_email: str):
+    try:
+        result = gam_service.GamService().create_group(group_email)
+        return {
+            "detail": f"Group creation attempted for {group_email}",
+            "output": result
+            }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete("/delete-group/{group_email}")
+async def delete_gam_group(group_email: str):
+    try:
+        result = gam_service.GamService().delete_group(group_email)
+        return {
+            "detail": f"Group deletion attempted for {group_email}",
             "output": result
             }
     except Exception as e:

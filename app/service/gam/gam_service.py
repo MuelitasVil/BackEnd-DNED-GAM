@@ -82,7 +82,7 @@ class GamService:
         """Agrega un usuario a un grupo utilizando GAM"""
         command = [
             'gam', 'update', 'group', group_email,
-            'add', 'member', user_email
+            'add', 'owner', user_email
             ]
         result = self._call_gam_command(command)
         if result.returncode == 0:

@@ -42,3 +42,18 @@ class SchoolHeadquartersAssociateClient:
             data = response.json()
             print(data)
             return sch(**data)
+
+    @staticmethod
+    async def fetch_associations_by_headquarters(
+        cod_headquarters: str,
+        period: str,
+    ) -> List[sch]:
+        url = (
+            f"http://{base_url}/school_headquarters_associates/"
+            f"headquarters/{cod_headquarters}/{period}"
+        )
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url, follow_redirects=True)
+            response.raise_for_status()
+            data = response.json()
+            return [sch(**assoc) for assoc in data]

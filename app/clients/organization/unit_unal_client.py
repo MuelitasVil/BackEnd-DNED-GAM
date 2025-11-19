@@ -35,11 +35,14 @@ class UnitUnalClient:
 
     @staticmethod
     async def fetch_email_list_of_unit(
-        cod_unit: str, cod_period: str
+        cod_unit: str, period: str
     ) -> list[EmailDTO]:
         """Obtiene la lista de correos electrónicos de una
         unidad para un periodo específico."""
-        url = f"http://{base_url}/units_unal/get-email-list/{cod_unit}/{cod_period}"
+        url = (
+            f"http://{base_url}/units_unal/get-email-list/"
+            f"{cod_unit}/{period}"
+        )
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
             response.raise_for_status()

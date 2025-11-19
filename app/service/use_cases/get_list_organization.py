@@ -105,7 +105,7 @@ class ExportEmailListsService:
             ]
             school_codes = sorted({a.cod_school for a in sch_for_hq})
             print(2)  # Puedes eliminar esto después de depurar
-            
+
             async def process_school(cod_school: str):
                 self.logger.info(f"Processing school {cod_school}")
                 school_emails = await SchoolClient.fetch_email_list_of_school(

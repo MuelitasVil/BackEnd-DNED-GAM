@@ -59,3 +59,21 @@ async def delete_gam_group(group_email: str):
             }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/add-user-to-group/")
+async def add_user_to_gam_group(
+    user_email: str, group_email: str, role: str
+):
+    try:
+        result = gam_service.GamService().add_user_to_group(
+            user_email, group_email, role
+        )
+        return {
+            "detail": "Add user {} to group {} attempted".format(
+                user_email, group_email
+            ),
+            "output": result
+            }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

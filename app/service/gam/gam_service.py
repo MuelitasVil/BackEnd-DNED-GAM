@@ -75,3 +75,23 @@ class GamService:
         else:
             self.logger.error(f"Failed to delete group {group_email}.")
             return False
+
+    def add_user_to_group(
+            self, user_email: str, group_email: str, role: str
+    ) -> bool:
+        """Agrega un usuario a un grupo utilizando GAM"""
+        command = [
+            'gam', 'update', 'group', group_email,
+            'add', 'member', user_email, 'role', role
+            ]
+        result = self._call_gam_command(command)
+        if result.returncode == 0:
+            self.logger.info(
+                f"User {user_email} added to group {group_email} successfully."
+            )
+            return True
+        else:
+            self.logger.error(
+                f"Failed to add user {user_email} to group {group_email}."
+                )
+            return False

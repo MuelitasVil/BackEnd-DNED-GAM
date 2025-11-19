@@ -12,7 +12,9 @@ class GamService:
         """Método interno para ejecutar un comando GAM"""
         try:
             # Ejecuta el comando GAM usando subprocess y captura la salida
-            result = subprocess.run(command, text=True, capture_output=True, check=True)
+            result = subprocess.run(
+                command, text=True, capture_output=True, check=True
+            )
             return result
         except subprocess.CalledProcessError as e:
             # Si hay un error, lo logeamos y lo retornamos

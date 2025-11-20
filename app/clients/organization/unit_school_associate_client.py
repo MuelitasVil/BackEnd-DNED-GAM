@@ -38,15 +38,15 @@ class UnitSchoolAssociateClient:
             response.raise_for_status()
             data = response.json()
             return UnitSchoolAssociateDTO(**data)
-        
+
     @staticmethod
-    async def fetch_associations_by_unit(
-        cod_unit: str,
+    async def fetch_associations_by_school(
+        cod_school: str,
         period: str,
     ) -> List[UnitSchoolAssociateDTO]:
         url = (
             f"{base_url}/unit_school_associates/"
-            f"unit/{cod_unit}/{period}"
+            f"by-school/{cod_school}/{period}"
         )
         async with httpx.AsyncClient() as client:
             response = await client.get(url, follow_redirects=True)

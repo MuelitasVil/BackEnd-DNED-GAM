@@ -50,7 +50,7 @@ class SchoolHeadquartersAssociateClient:
     ) -> List[sch]:
         url = (
             f"{base_url}/school_headquarters_associates/"
-            f"headquarters/{cod_headquarters}/{period}"
+            f"by-headquarters/{cod_headquarters}/{period}"
         )
         async with httpx.AsyncClient() as client:
             response = await client.get(url, follow_redirects=True)

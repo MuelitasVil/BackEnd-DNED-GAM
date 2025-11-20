@@ -14,7 +14,7 @@ class SchoolClient:
     async def fetch_schools(
         start: int = 0, limit: int = 100
     ) -> List[SchoolDTO]:
-        url = f"http://{base_url}/schools?start={start}&limit={limit}"
+        url = f"{base_url}/schools?start={start}&limit={limit}"
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
             response.raise_for_status()
@@ -23,7 +23,7 @@ class SchoolClient:
 
     @staticmethod
     async def fetch_school_by_id(cod_school: str) -> SchoolDTO:
-        url = f"http://{base_url}/schools/{cod_school}"
+        url = f"{base_url}/schools/{cod_school}"
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
             response.raise_for_status()
@@ -35,7 +35,10 @@ class SchoolClient:
         cod_school: str,
         cod_period: str
     ) -> List[EmailDTO]:
-        url = f"http://{base_url}/schools/get-email-list/{cod_school}/{cod_period}"
+        url = (
+            f"{base_url}/schools/get-email-list/"
+            f"{cod_school}/{cod_period}"
+        )
         async with httpx.AsyncClient(timeout=httpx.Timeout(30.0)) as client:
             response = await client.get(url)
             response.raise_for_status()

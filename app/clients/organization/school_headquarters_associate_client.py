@@ -16,7 +16,7 @@ class SchoolHeadquartersAssociateClient:
         start: int = 0, limit: int = 100
     ) -> List[sch]:
         url = (
-            f"http://{base_url}/school_headquarters_associates"
+            f"{base_url}/school_headquarters_associates"
             f"?start={start}&limit={limit}"
         )
         async with httpx.AsyncClient() as client:
@@ -32,7 +32,7 @@ class SchoolHeadquartersAssociateClient:
         cod_period: str,
     ) -> sch:
         url = (
-            f"http://{base_url}/school_headquarters_associates/"
+            f"{base_url}/school_headquarters_associates/"
             f"{cod_school}/{cod_headquarters}/{cod_period}"
         )
         print(url)
@@ -49,7 +49,7 @@ class SchoolHeadquartersAssociateClient:
         period: str,
     ) -> List[sch]:
         url = (
-            f"http://{base_url}/school_headquarters_associates/"
+            f"{base_url}/school_headquarters_associates/"
             f"headquarters/{cod_headquarters}/{period}"
         )
         async with httpx.AsyncClient() as client:

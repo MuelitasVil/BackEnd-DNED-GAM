@@ -12,7 +12,7 @@ class UserOrganizationClient:
 
     @staticmethod
     async def fetch_users() -> List[UnitUnalDTO]:
-        url = f"http://{base_url}/users_unal/"
+        url = f"{base_url}/users_unal/"
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
             response.raise_for_status()
@@ -20,7 +20,7 @@ class UserOrganizationClient:
 
     @staticmethod
     async def fetch_user_by_email(email_unal: str) -> UnitUnalDTO:
-        url = f"http://{base_url}/users_unal/{email_unal}"
+        url = f"{base_url}/users_unal/{email_unal}"
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
             response.raise_for_status()

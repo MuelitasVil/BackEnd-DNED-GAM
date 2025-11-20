@@ -18,7 +18,7 @@ class UnitUnalClient:
         start: int = 0, limit: int = 100
     ) -> list[UnitUnalDTO]:
         """Obtiene la lista de todas las unidades con paginación."""
-        url = f"http://{base_url}/units_unal?start={start}&limit={limit}"
+        url = f"{base_url}/units_unal?start={start}&limit={limit}"
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
             response.raise_for_status()
@@ -27,7 +27,7 @@ class UnitUnalClient:
     @staticmethod
     async def fetch_unit_by_id(cod_unit: str) -> UnitUnalDTO:
         """Obtiene una unidad específica por su código."""
-        url = f"http://{base_url}/units_unal/{cod_unit}"
+        url = f"{base_url}/units_unal/{cod_unit}"
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
             response.raise_for_status()
@@ -40,7 +40,7 @@ class UnitUnalClient:
         """Obtiene la lista de correos electrónicos de una
         unidad para un periodo específico."""
         url = (
-            f"http://{base_url}/units_unal/get-email-list/"
+            f"{base_url}/units_unal/get-email-list/"
             f"{cod_unit}/{period}"
         )
         async with httpx.AsyncClient() as client:

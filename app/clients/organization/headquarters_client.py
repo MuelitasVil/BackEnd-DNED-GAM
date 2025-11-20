@@ -7,7 +7,6 @@ from app.domain.dtos.organization.email_dto import EmailDTO
 from typing import List
 
 base_url = settings.DNED_ORGANIZATION
-url = f"http://{base_url}/headquarters/"
 
 
 class HeadquartersClient:
@@ -18,7 +17,7 @@ class HeadquartersClient:
     ) -> List[HeadquartersDTO]:
         """Obtiene la lista de todos los headquarters con paginación."""
         full_url = (
-            f"http://{base_url}/headquarters?"
+            f"{base_url}/headquarters?"
             f"start={start}&limit={limit}"
         )
         try:
@@ -42,7 +41,7 @@ class HeadquartersClient:
         cod_headquarters: str
     ) -> HeadquartersDTO:
         """Obtiene un headquarter específico por su código."""
-        full_url = f"http://{base_url}/headquarters/{cod_headquarters}"
+        full_url = f"{base_url}/headquarters/{cod_headquarters}"
         try:
             async with httpx.AsyncClient() as client:
                 response = await client.get(full_url)
@@ -62,7 +61,7 @@ class HeadquartersClient:
         cod_headquarters: str, cod_period: str
     ) -> List[EmailDTO]:
         url = (
-            f"http://{base_url}/headquarters/get-email-list/"
+            f"{base_url}/headquarters/get-email-list/"
             f"{cod_headquarters}/{cod_period}"
         )
         try:

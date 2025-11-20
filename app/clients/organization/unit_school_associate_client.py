@@ -16,7 +16,7 @@ class UnitSchoolAssociateClient:
         start: int = 0, limit: int = 100
     ) -> List[UnitSchoolAssociateDTO]:
         url = (
-            f"http://{base_url}/unit_school_associates"
+            f"{base_url}/unit_school_associates"
             f"?start={start}&limit={limit}"
         )
         async with httpx.AsyncClient() as client:
@@ -30,7 +30,7 @@ class UnitSchoolAssociateClient:
         cod_unit: str, cod_school: str, cod_period: str
     ) -> UnitSchoolAssociateDTO:
         url = (
-            f"http://{base_url}/unit_school_associates"
+            f"{base_url}/unit_school_associates"
             f"/{cod_unit}/{cod_school}/{cod_period}"
         )
         async with httpx.AsyncClient() as client:
@@ -45,7 +45,7 @@ class UnitSchoolAssociateClient:
         period: str,
     ) -> List[UnitSchoolAssociateDTO]:
         url = (
-            f"http://{base_url}/unit_school_associates/"
+            f"{base_url}/unit_school_associates/"
             f"unit/{cod_unit}/{period}"
         )
         async with httpx.AsyncClient() as client:

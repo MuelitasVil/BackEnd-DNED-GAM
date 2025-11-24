@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.controllers import test_controller
 from app.controllers import csv_gam_files_controllers
-from app.controllers import gam_controller
+from app.controllers import gam_user_controller
 
 app = FastAPI()
 
@@ -13,4 +13,4 @@ def read_root():
 
 app.include_router(test_controller.router)
 app.include_router(csv_gam_files_controllers.router)
-app.include_router(gam_controller.router)
+app.include_router(gam_user_controller.router)

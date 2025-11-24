@@ -1,6 +1,8 @@
 # app/controllers/export_controller.py
 from fastapi import APIRouter, HTTPException
-from app.service.use_cases.get_list_organization_v2 import generate_for_headquarters
+from app.service.use_cases.get_list_organization_v2 import (
+    generate_for_headquarters
+)
 
 router = APIRouter(prefix="/exports", tags=["Exports"])
 

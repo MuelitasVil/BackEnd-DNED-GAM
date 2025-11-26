@@ -77,7 +77,7 @@ class GamGroupService:
             return False
         
     @staticmethod
-    async def manage_group(group_email: str, users: List[Email]) -> None:
+    async def update_group(group_email: str, users: List[Email]) -> None:
         """
         Eliminar y crear el grupo, luego agregar los usuarios.
         El grupo es eliminado, creado y los usuarios agregados de forma concurrente.

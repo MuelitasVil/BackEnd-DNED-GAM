@@ -4,7 +4,7 @@ from app.clients.organization.headquarters_client import HeadquartersClient
 from app.clients.organization.school_client import SchoolClient
 from app.clients.organization.unit_unal_client import UnitUnalClient
 from app.domain.dtos.organization.email_dto import EmailDTO
-from app.utils.app_logger import AppLogger 
+from app.utils.app_logger import AppLogger
 
 
 logger = AppLogger("ExportEmailListsService")

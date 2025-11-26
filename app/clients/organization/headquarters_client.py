@@ -27,13 +27,11 @@ class HeadquartersClient:
                 data = response.json()
                 return [HeadquartersDTO(**hq) for hq in data]
         except httpx.HTTPStatusError as e:
-            # Se lanza un HTTPException con el código de error y mensaje
             raise HTTPException(
                 status_code=e.response.status_code,
                 detail=f"Error fetching headquarters: {e}"
             )
         except httpx.RequestError as e:
-            # Captura errores de la solicitud (e.g., timeout, no conexión)
             raise HTTPException(status_code=500, detail=f"Request error: {e}")
 
     @staticmethod
@@ -41,7 +39,7 @@ class HeadquartersClient:
         cod_headquarters: str
     ) -> HeadquartersDTO:
         """Obtiene un headquarter específico por su código."""
-        full_url = f"{base_url}/headquarters/{cod_headquarters}"
+        full_url = f"{base_url}/headquarters/by_code/{cod_headquarters}"
         try:
             async with httpx.AsyncClient() as client:
                 response = await client.get(full_url)
@@ -52,6 +50,27 @@ class HeadquartersClient:
             raise HTTPException(
                 status_code=e.response.status_code,
                 detail=f"Error fetching headquarter: {e}"
+            )
+        except httpx.RequestError as e:
+            raise HTTPException(status_code=500, detail=f"Request error: {e}")
+
+    @staticmethod
+    async def fetch_headquarters_by_name(
+        name: str
+    ) -> List[HeadquartersDTO]:
+        """Obtiene una lista de headquarters
+        que coinciden con el nombre dado."""
+        full_url = f"{base_url}/headquarters/by_name/{name}"
+        try:
+            async with httpx.AsyncClient() as client:
+                response = await client.get(full_url)
+                response.raise_for_status()
+                data = response.json()
+                return [HeadquartersDTO(**hq) for hq in data]
+        except httpx.HTTPStatusError as e:
+            raise HTTPException(
+                status_code=e.response.status_code,
+                detail=f"Error fetching headquarters by name: {e}"
             )
         except httpx.RequestError as e:
             raise HTTPException(status_code=500, detail=f"Request error: {e}")

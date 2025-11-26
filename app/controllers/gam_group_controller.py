@@ -1,7 +1,13 @@
 from fastapi import APIRouter, HTTPException
+from app.domain.dtos.gam.update_units_by_headquarters_dto import (
+    UpdateUnitsByHeadquarters
+)
 from app.service.gam.gam_group_service import GamGroupService
+from app.service.use_cases.update_units_of_headquaters import (
+    update_units_of_headquarters
+)
 
-router = APIRouter(prefix="/gam-group", tags=["GAM"])
+router = APIRouter(prefix="/gam-group", tags=["GAM-Group"])
 
 
 @router.post("/create-group/{group_email}")
@@ -59,6 +65,22 @@ async def add_owner_to_gam_group(
                 user_email, group_email
             ),
             "output": result
+            }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/update-all-units-by-headquarters")
+async def update_all_units_by_headquarters(
+    data: UpdateUnitsByHeadquarters
+):
+    try:
+        await update_units_of_headquarters(
+            data.name_headquarters, data.period
+        )
+        return {
+            "detail": f"Update of units for headquarters "
+            f"{data.name_headquarters} in period {data.period} attempted"
             }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

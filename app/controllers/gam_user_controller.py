@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from app.service.gam.gam_user_service import GamUserService
 
 
-router = APIRouter(prefix="/gam-user", tags=["GAM"])
+router = APIRouter(prefix="/gam-user", tags=["GAM-User"])
 
 
 @router.post("/create-user/{email}")

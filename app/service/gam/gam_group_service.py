@@ -78,7 +78,10 @@ class GamGroupService:
 
     @staticmethod
     async def update_group(group_email: str, users: List[Email]) -> None:
-        GamGroupService.delete_group(group_email)
+        try:
+            GamGroupService.delete_group(group_email)
+        except Exception as e:
+            logger.error(f"Connection: {e}")
 
         if not GamGroupService.create_group(group_email):
             logger.error(f"Failed to create group {group_email}.")

@@ -70,7 +70,7 @@ async def update_units_of_headquarters(name: str, period: str) -> None:
     units_email_senders = await _get_email_senders_by_units(
         unit_in_schools, period
     )
-    background_tasks.add_task(_loggerEmailsByUnits, units_email_senders)
+    _loggerEmailsByUnits(units_email_senders)
 
     for unit_email_sender in units_email_senders:
         await GamGroupService.update_group(

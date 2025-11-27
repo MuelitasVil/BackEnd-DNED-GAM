@@ -93,14 +93,14 @@ class GamGroupService:
             if user_email.role == 'OWNER':
                 tasks.append(asyncio.to_thread(
                     GamGroupService.add_user_owener_to_group,
-                    user_email.email + "@unal.edu.co",
-                    group_email
+                    user_email.email,
+                    group_email + "@unal.edu.co"
                 ))
             else:
                 tasks.append(asyncio.to_thread(
                     GamGroupService.add_user_member_to_group,
-                    user_email.email + "@unal.edu.co",
-                    group_email
+                    user_email.email,
+                    group_email + "@unal.edu.co"
                 ))
 
         await asyncio.gather(*tasks)

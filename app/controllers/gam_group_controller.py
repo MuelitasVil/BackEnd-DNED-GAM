@@ -78,6 +78,5 @@ async def update_all_units_by_headquarters(
         return await update_units_of_headquarters(
             data.name_headquarters, data.period
         )
-
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -3,7 +3,7 @@ import subprocess
 from fastapi import HTTPException
 from app.utils.app_logger import AppLogger
 
-logger = AppLogger(__file__, "gam_service_group.log")
+logger = AppLogger(__file__, "gam_client.log")
 
 
 class GamClient:

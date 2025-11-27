@@ -36,7 +36,7 @@ class GamGroupService:
 
     @staticmethod
     def add_user_owener_to_group(
-            user_email: str, group_email: str, role: str
+            user_email: str, group_email: str
     ) -> bool:
         """Agrega un usuario a un grupo utilizando GAM"""
         command = [

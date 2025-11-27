@@ -75,32 +75,30 @@ class GamGroupService:
                 f"Failed to add user {user_email} to group {group_email}."
                 )
             return False
-        
+
     @staticmethod
     async def update_group(group_email: str, users: List[Email]) -> None:
-        """
-        Eliminar y crear el grupo, luego agregar los usuarios.
-        El grupo es eliminado, creado y los usuarios agregados de forma concurrente.
-        """
-        # 1. Eliminar el grupo si existe
         GamGroupService.delete_group(group_email)
 
-        # 2. Crear el grupo
         if not GamGroupService.create_group(group_email):
             logger.error(f"Failed to create group {group_email}.")
             return
 
-        # 3. Procesar la adición de usuarios concurrentemente
         tasks = []
+        user_email: Email
+        for user_email in users:
+            if user_email.role == 'OWNER':
+                tasks.append(asyncio.to_thread(
+                    GamGroupService.add_user_owener_to_group,
+                    user_email.email,
+                    group_email
+                ))
+            else:
+                tasks.append(asyncio.to_thread(
+                    GamGroupService.add_user_member_to_group,
+                    user_email.email,
+                    group_email
+                ))
 
-        # Para cada usuario en el grupo, se agrega según su rol
-        for user_email in users.get('owner', []):  # Asumiendo que el rol 'owner' es una lista
-            tasks.append(asyncio.to_thread(GamGroupService.add_user_owener_to_group, user_email, group_email))
-
-        for user_email in users.get('member', []):  # Asumiendo que el rol 'member' es una lista
-            tasks.append(asyncio.to_thread(GamGroupService.add_user_member_to_group, user_email, group_email))
-
-        # Ejecutar todas las tareas concurrentemente
         await asyncio.gather(*tasks)
-
         logger.info(f"All users added to group {group_email}.")

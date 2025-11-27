@@ -75,12 +75,9 @@ async def update_all_units_by_headquarters(
     data: UpdateUnitsByHeadquarters
 ):
     try:
-        await update_units_of_headquarters(
+        return await update_units_of_headquarters(
             data.name_headquarters, data.period
         )
-        return {
-            "detail": f"Update of units for headquarters "
-            f"{data.name_headquarters} in period {data.period} attempted"
-            }
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -47,7 +47,7 @@ async def update_units_of_headquarters(name: str, period: str) -> None:
 
     schools_in_headquarters: List[schClientDTO] = []
     schools_in_headquarters = await _get_schools_in_headquarters(
-        name, period, headquarters
+        period, headquarters
     )
     background_tasks.add_task(
         _loggerSchoolsInHeadquarters,

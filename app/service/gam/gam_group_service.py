@@ -12,11 +12,20 @@ logger = AppLogger(__file__, "gam_service_group.log")
 class GamGroupService:
     @staticmethod
     def create_group(group_email: str) -> bool:
-        """Crea un grupo utilizando GAM, dado su correo electrónico"""
-        command = ['gam', 'create', 'group', group_email]
+        command = [
+            'gam', 'create', 'group', group_email,
+            'allowExternalMembers', 'false',
+            'whoCanJoin', 'CAN_REQUEST_TO_JOIN',
+            'whoCanViewGroup', 'ALL_MANAGERS_CAN_VIEW',
+            'whoCanPostMessage', 'ALL_MANAGERS_CAN_POST'
+        ]
+
         result = GamClient.call_gam_command(command)
+
         if result.returncode == 0:
-            logger.info(f"Group {group_email} created successfully.")
+            logger.info(
+                f"Group {group_email} created successfully"
+            )
             return True
         else:
             logger.error(f"Failed to create group {group_email}.")

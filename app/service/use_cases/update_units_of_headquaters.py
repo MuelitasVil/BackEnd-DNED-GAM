@@ -35,6 +35,7 @@ semaphore = asyncio.Semaphore(10)
 
 
 async def update_units_of_headquarters(name: str, period: str) -> None:
+    # todo: try to use background tasks
     background_tasks: BackgroundTasks = BackgroundTasks()
 
     headquarters: List[HeadquartersDTO] = await (
@@ -43,16 +44,18 @@ async def update_units_of_headquarters(name: str, period: str) -> None:
 
     logger.info(f"Period: {period}")
     logger.info(f"Found {len(headquarters)} headquarters with name {name}")
-    background_tasks.add_task(_loggerHeadQuarters, headquarters)
+    # background_tasks.add_task(_loggerHeadQuarters, headquarters)
+    _loggerHeadQuarters(headquarters)
 
     schools_in_headquarters: List[schClientDTO] = []
     schools_in_headquarters = await _get_schools_in_headquarters(
         period, headquarters
     )
-    background_tasks.add_task(
-        _loggerSchoolsInHeadquarters,
-        schools_in_headquarters
-    )
+    # background_tasks.add_task(
+    #     _loggerSchoolsInHeadquarters,
+    #     schools_in_headquarters
+    # )
+    _loggerSchoolsInHeadquarters(schools_in_headquarters)
 
     logger.info(
         f"Found {len(schools_in_headquarters)} schools in headquarters"
@@ -62,7 +65,9 @@ async def update_units_of_headquarters(name: str, period: str) -> None:
     unit_in_schools = await _get_units_in_schools(
         period, schools_in_headquarters
     )
-    background_tasks.add_task(_loggerUnitsInSchools, unit_in_schools)
+
+    # background_tasks.add_task(_loggerUnitsInSchools, unit_in_schools)
+    _loggerUnitsInSchools(unit_in_schools)
 
     logger.info(f"Found {len(unit_in_schools)} units in schools")
 
@@ -72,11 +77,14 @@ async def update_units_of_headquarters(name: str, period: str) -> None:
     )
     _loggerEmailsByUnits(units_email_senders)
 
+    '''
+    todo: uncooment before de validations
     for unit_email_sender in units_email_senders:
         await GamGroupService.update_group(
             unit_email_sender,
             units_email_senders[unit_email_sender]
         )
+    '''
 
     return {
             "detail": f"Update of units for headquarters "

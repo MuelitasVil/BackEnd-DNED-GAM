@@ -10,6 +10,13 @@ base_url = settings.DNED_ORGANIZATION
 
 
 class HeadquartersClient:
+    _client = httpx.AsyncClient(
+        timeout=httpx.Timeout(30.0),
+        limits=httpx.Limits(
+            max_connections=10,
+            max_keepalive_connections=5
+        )
+    )
 
     @staticmethod
     async def fetch_headquarters(
@@ -21,10 +28,10 @@ class HeadquartersClient:
             f"start={start}&limit={limit}"
         )
         try:
-            async with httpx.AsyncClient() as client:
+            async with HeadquartersClient._client as client:
                 response = await client.get(full_url)
                 response.raise_for_status()
-                data = response.json()
+                data = await response.json()
                 return [HeadquartersDTO(**hq) for hq in data]
         except httpx.HTTPStatusError as e:
             raise HTTPException(
@@ -41,7 +48,7 @@ class HeadquartersClient:
         """Obtiene un headquarter específico por su código."""
         full_url = f"{base_url}/headquarters/by_code/{cod_headquarters}"
         try:
-            async with httpx.AsyncClient() as client:
+            async with HeadquartersClient._client as client:
                 response = await client.get(full_url)
                 response.raise_for_status()
                 data = response.json()
@@ -62,7 +69,7 @@ class HeadquartersClient:
         que coinciden con el nombre dado."""
         full_url = f"{base_url}/headquarters/by_name/{name}"
         try:
-            async with httpx.AsyncClient() as client:
+            async with HeadquartersClient._client as client:
                 response = await client.get(full_url)
                 response.raise_for_status()
                 data = response.json()
@@ -84,7 +91,7 @@ class HeadquartersClient:
             f"{cod_headquarters}/{cod_period}"
         )
         try:
-            async with httpx.AsyncClient() as client:
+            async with HeadquartersClient._client as client:
                 response = await client.get(url)
                 response.raise_for_status()
                 data = response.json()

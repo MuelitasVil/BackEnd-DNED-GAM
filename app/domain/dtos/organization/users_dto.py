@@ -3,7 +3,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class UnitUnalDTO(BaseModel):
+class UserUnalDto(BaseModel):
     email_unal: str
     document: Optional[str]
     name: Optional[str]

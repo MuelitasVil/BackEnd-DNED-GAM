@@ -9,13 +9,20 @@ base_url = settings.DNED_ORGANIZATION
 
 
 class SchoolClient:
+    _client = httpx.AsyncClient(
+        timeout=httpx.Timeout(30.0),
+        limits=httpx.Limits(
+            max_connections=10,
+            max_keepalive_connections=5
+        )
+    )
 
     @staticmethod
     async def fetch_schools(
         start: int = 0, limit: int = 100
     ) -> List[SchoolDTO]:
         url = f"{base_url}/schools?start={start}&limit={limit}"
-        async with httpx.AsyncClient() as client:
+        async with SchoolClient._client as client:
             response = await client.get(url)
             response.raise_for_status()
             data = response.json()
@@ -24,10 +31,10 @@ class SchoolClient:
     @staticmethod
     async def fetch_school_by_id(cod_school: str) -> SchoolDTO:
         url = f"{base_url}/schools/{cod_school}"
-        async with httpx.AsyncClient() as client:
+        async with SchoolClient._client as client:
             response = await client.get(url)
             response.raise_for_status()
-            data = response.json()
+            data = await response.json()
             return SchoolDTO(**data)
 
     @staticmethod
@@ -42,7 +49,7 @@ class SchoolClient:
         async with httpx.AsyncClient(timeout=httpx.Timeout(30.0)) as client:
             response = await client.get(url)
             response.raise_for_status()
-            data = response.json()
+            data = await response.json()
             print(data)
             return [EmailDTO(
                     email=email[0], role=email[1]

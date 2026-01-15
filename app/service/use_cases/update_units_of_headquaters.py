@@ -31,7 +31,7 @@ from app.service.gam.gam_group_service import (
 )
 
 logger = AppLogger(__file__, "update_unis_of_headquaters.log")
-semaphore = asyncio.Semaphore(10)
+semaphore = asyncio.Semaphore(5)
 
 
 async def update_units_of_headquarters(name: str, period: str) -> None:

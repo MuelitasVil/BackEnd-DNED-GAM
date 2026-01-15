@@ -11,6 +11,14 @@ base_url = settings.DNED_ORGANIZATION
 
 class UnitSchoolAssociateClient:
 
+    _client = httpx.AsyncClient(
+        timeout=httpx.Timeout(30.0),
+        limits=httpx.Limits(
+            max_connections=10,
+            max_keepalive_connections=5
+        )
+    )
+
     @staticmethod
     async def fetch_associations(
         start: int = 0, limit: int = 100
@@ -19,10 +27,10 @@ class UnitSchoolAssociateClient:
             f"{base_url}/unit_school_associates"
             f"?start={start}&limit={limit}"
         )
-        async with httpx.AsyncClient() as client:
+        async with UnitSchoolAssociateClient._client as client:
             response = await client.get(url, follow_redirects=True)
             response.raise_for_status()
-            data = response.json()
+            data = await response.json()
             return [UnitSchoolAssociateDTO(**assoc) for assoc in data]
 
     @staticmethod
@@ -33,10 +41,10 @@ class UnitSchoolAssociateClient:
             f"{base_url}/unit_school_associates"
             f"/{cod_unit}/{cod_school}/{cod_period}"
         )
-        async with httpx.AsyncClient() as client:
+        async with UnitSchoolAssociateClient._client as client:
             response = await client.get(url)
             response.raise_for_status()
-            data = response.json()
+            data = await response.json()
             return UnitSchoolAssociateDTO(**data)
 
     @staticmethod
@@ -48,8 +56,8 @@ class UnitSchoolAssociateClient:
             f"{base_url}/unit_school_associates/"
             f"by-school/{cod_school}/{period}"
         )
-        async with httpx.AsyncClient() as client:
+        async with UnitSchoolAssociateClient._client as client:
             response = await client.get(url, follow_redirects=True)
             response.raise_for_status()
-            data = response.json()
+            data = await response.json()
             return [UnitSchoolAssociateDTO(**assoc) for assoc in data]

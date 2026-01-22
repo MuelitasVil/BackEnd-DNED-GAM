@@ -24,7 +24,7 @@ class SchoolClient:
         url = f"{base_url}/schools?start={start}&limit={limit}"
         response = await SchoolClient._client.get(url)
         response.raise_for_status()
-        data = await response.json()
+        data = response.json()
         return [SchoolDTO(**school) for school in data]
 
     @staticmethod
@@ -32,7 +32,7 @@ class SchoolClient:
         url = f"{base_url}/schools/{cod_school}"
         response = await SchoolClient._client.get(url)
         response.raise_for_status()
-        data = await response.json()
+        data = response.json()
         return SchoolDTO(**data)
 
     @staticmethod
@@ -46,7 +46,7 @@ class SchoolClient:
         )
         response = await SchoolClient._client.get(url)
         response.raise_for_status()
-        data = await response.json()
+        data = response.json()
         return [EmailDTO(
                     email=email[0], role=email[1]
                     ) for email in data]

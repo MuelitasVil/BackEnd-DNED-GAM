@@ -31,7 +31,7 @@ class UnitSchoolAssociateClient:
             url, follow_redirects=True
         )
         response.raise_for_status()
-        data = await response.json()
+        data = response.json()
         return [UnitSchoolAssociateDTO(**assoc) for assoc in data]
 
     @staticmethod
@@ -44,7 +44,7 @@ class UnitSchoolAssociateClient:
         )
         response = await UnitSchoolAssociateClient._client.get(url)
         response.raise_for_status()
-        data = await response.json()
+        data = response.json()
         return UnitSchoolAssociateDTO(**data)
 
     @staticmethod
@@ -60,5 +60,5 @@ class UnitSchoolAssociateClient:
             url, follow_redirects=True
         )
         response.raise_for_status()
-        data = await response.json()
+        data = response.json()
         return [UnitSchoolAssociateDTO(**assoc) for assoc in data]

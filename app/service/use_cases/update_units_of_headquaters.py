@@ -1,5 +1,7 @@
 import asyncio
 from typing import List
+
+import httpx
 from app.utils.app_logger import AppLogger
 from fastapi import BackgroundTasks
 
@@ -31,7 +33,7 @@ from app.service.gam.gam_group_service import (
 )
 
 logger = AppLogger(__file__, "update_unis_of_headquaters.log")
-semaphore = asyncio.Semaphore(5)
+semaphore = asyncio.Semaphore(10)
 
 
 async def update_units_of_headquarters(name: str, period: str) -> None:
@@ -176,22 +178,34 @@ async def _get_email_senders_by_units(
 
 
 async def fetch_emails_for_unit(
-        unit: unitSchoolDTO,
-        period: str
+    unit: unitSchoolDTO,
+    period: str
 ) -> List[Email]:
-    try:
-        temp_emails: List[Email] = (
-            await UnitUnalClient.fetch_email_list_of_unit(
+    async with semaphore:
+        try:
+            return await UnitUnalClient.fetch_email_list_of_unit(
                 cod_unit=unit.cod_unit,
                 period=period
             )
-        )
-        return temp_emails
-    except Exception as e:
-        logger.error(
-            f"Failed fetching email senders for unit"
-            f" {unit.cod_unit}: {e}")
-        return []
+        except httpx.HTTPStatusError as e:
+            logger.error(
+                f"HTTP {e.response.status_code} "
+                f"for unit {unit.cod_unit}"
+                f"error: {e}"
+            )
+            return []
+        except httpx.TimeoutException as e:
+            logger.error(
+                f"Timeout fetching emails for unit {unit.cod_unit}"
+                f"error: {e}"
+            )
+            return []
+        except Exception as e:
+            logger.exception(
+                f"Unexpected error for unit {unit.cod_unit}"
+                f"error: {e}"
+            )
+            return []
 
 
 def _loggerHeadQuarters(headquarters: List[HeadquartersDTO]) -> None:
@@ -221,4 +235,4 @@ def _loggerEmailsByUnits(units_email_senders: dict[str, List[Email]]) -> None:
         logger.info(f"Emails for Unit Code: {cod_unit}")
         emails = units_email_senders[cod_unit]
         for email in emails:
-            logger.info(f" - Email: {email.email}, Role: {email.role}")
+            logger.info(f" - Email: {email}")

@@ -13,10 +13,15 @@ base_url = settings.DNED_ORGANIZATION
 
 class UnitUnalClient:
     _client = httpx.AsyncClient(
-        timeout=httpx.Timeout(30.0),
+        timeout=httpx.Timeout(
+            connect=5.0,
+            read=10.0,
+            write=5.0,
+            pool=5.0
+        ),
         limits=httpx.Limits(
-            max_connections=10,
-            max_keepalive_connections=5
+            max_connections=20,
+            max_keepalive_connections=10
         )
     )
 

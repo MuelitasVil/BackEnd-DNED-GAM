@@ -30,7 +30,7 @@ class SchoolHeadquartersAssociateClient:
             url, follow_redirects=True
         )
         response.raise_for_status()
-        data = await response.json()
+        data = response.json()
         return [sch(**assoc) for assoc in data]
 
     @staticmethod

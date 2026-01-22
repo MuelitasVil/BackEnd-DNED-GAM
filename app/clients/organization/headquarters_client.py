@@ -30,7 +30,7 @@ class HeadquartersClient:
         try:
             response = await HeadquartersClient._client.get(full_url)
             response.raise_for_status()
-            data = await response.json()
+            data = response.json()
             return [HeadquartersDTO(**hq) for hq in data]
         except httpx.HTTPStatusError as e:
             raise HTTPException(
@@ -49,7 +49,7 @@ class HeadquartersClient:
         try:
             response = await HeadquartersClient._client.get(full_url)
             response.raise_for_status()
-            data = await response.json()
+            data = response.json()
             return HeadquartersDTO(**data)
         except httpx.HTTPStatusError as e:
             raise HTTPException(
@@ -69,7 +69,7 @@ class HeadquartersClient:
         try:
             response = await HeadquartersClient._client.get(full_url)
             response.raise_for_status()
-            data = await response.json()
+            data = response.json()
             return [HeadquartersDTO(**hq) for hq in data]
         except httpx.HTTPStatusError as e:
             raise HTTPException(
@@ -90,7 +90,7 @@ class HeadquartersClient:
         try:
             response = await HeadquartersClient._client.get(url)
             response.raise_for_status()
-            data = await response.json()
+            data = response.json()
             print(data)
             return [EmailDTO(
                 email=email[0], role=email[1]

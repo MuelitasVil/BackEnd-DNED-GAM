@@ -34,7 +34,7 @@ class SchoolClient:
         async with SchoolClient._client as client:
             response = await client.get(url)
             response.raise_for_status()
-            data = await response.json()
+            data = response.json()
             return SchoolDTO(**data)
 
     @staticmethod
@@ -49,7 +49,7 @@ class SchoolClient:
         async with httpx.AsyncClient(timeout=httpx.Timeout(30.0)) as client:
             response = await client.get(url)
             response.raise_for_status()
-            data = await response.json()
+            data = response.json()
             print(data)
             return [EmailDTO(
                     email=email[0], role=email[1]

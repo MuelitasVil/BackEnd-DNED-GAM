@@ -29,7 +29,7 @@ class SchoolHeadquartersAssociateClient:
         async with SchoolHeadquartersAssociateClient._client as client:
             response = await client.get(url, follow_redirects=True)
             response.raise_for_status()
-            data = await response.json()
+            data = response.json()
             return [sch(**assoc) for assoc in data]
 
     @staticmethod
@@ -46,7 +46,7 @@ class SchoolHeadquartersAssociateClient:
         async with SchoolHeadquartersAssociateClient._client as client:
             response = await client.get(url)
             response.raise_for_status()
-            data = await response.json()
+            data = response.json()
             print(data)
             return sch(**data)
 
@@ -62,5 +62,5 @@ class SchoolHeadquartersAssociateClient:
         async with SchoolHeadquartersAssociateClient._client as client:
             response = await client.get(url, follow_redirects=True)
             response.raise_for_status()
-            data = await response.json()
+            data = response.json()
             return [sch(**assoc) for assoc in data]

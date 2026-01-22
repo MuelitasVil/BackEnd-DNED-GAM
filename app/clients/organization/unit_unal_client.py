@@ -26,10 +26,10 @@ class UnitUnalClient:
     ) -> list[UnitUnalDTO]:
         """Obtiene la lista de todas las unidades con paginación."""
         url = f"{base_url}/units_unal?start={start}&limit={limit}"
-        async with UnitUnalClient._client as client:
-            response = await client.get(url)
-            response.raise_for_status()
-            return [UnitUnalDTO(**item) for item in response.json()]
+        response = await UnitUnalClient._client.get(url)
+        response.raise_for_status()
+        data = response.json()
+        return [UnitUnalDTO(**item) for item in data]
 
     @staticmethod
     async def fetch_unit_by_id(cod_unit: str) -> UnitUnalDTO:

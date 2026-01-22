@@ -28,11 +28,10 @@ class HeadquartersClient:
             f"start={start}&limit={limit}"
         )
         try:
-            async with HeadquartersClient._client as client:
-                response = await client.get(full_url)
-                response.raise_for_status()
-                data = await response.json()
-                return [HeadquartersDTO(**hq) for hq in data]
+            response = await HeadquartersClient._client.get(full_url)
+            response.raise_for_status()
+            data = await response.json()
+            return [HeadquartersDTO(**hq) for hq in data]
         except httpx.HTTPStatusError as e:
             raise HTTPException(
                 status_code=e.response.status_code,
@@ -48,11 +47,10 @@ class HeadquartersClient:
         """Obtiene un headquarter específico por su código."""
         full_url = f"{base_url}/headquarters/by_code/{cod_headquarters}"
         try:
-            async with HeadquartersClient._client as client:
-                response = await client.get(full_url)
-                response.raise_for_status()
-                data = response.json()
-                return HeadquartersDTO(**data)
+            response = await HeadquartersClient._client.get(full_url)
+            response.raise_for_status()
+            data = await response.json()
+            return HeadquartersDTO(**data)
         except httpx.HTTPStatusError as e:
             raise HTTPException(
                 status_code=e.response.status_code,
@@ -69,11 +67,10 @@ class HeadquartersClient:
         que coinciden con el nombre dado."""
         full_url = f"{base_url}/headquarters/by_name/{name}"
         try:
-            async with HeadquartersClient._client as client:
-                response = await client.get(full_url)
-                response.raise_for_status()
-                data = response.json()
-                return [HeadquartersDTO(**hq) for hq in data]
+            response = await HeadquartersClient._client.get(full_url)
+            response.raise_for_status()
+            data = await response.json()
+            return [HeadquartersDTO(**hq) for hq in data]
         except httpx.HTTPStatusError as e:
             raise HTTPException(
                 status_code=e.response.status_code,
@@ -91,14 +88,13 @@ class HeadquartersClient:
             f"{cod_headquarters}/{cod_period}"
         )
         try:
-            async with HeadquartersClient._client as client:
-                response = await client.get(url)
-                response.raise_for_status()
-                data = response.json()
-                print(data)
-                return [EmailDTO(
-                    email=email[0], role=email[1]
-                ) for email in data]
+            response = await HeadquartersClient._client.get(url)
+            response.raise_for_status()
+            data = await response.json()
+            print(data)
+            return [EmailDTO(
+                email=email[0], role=email[1]
+            ) for email in data]
         except httpx.HTTPStatusError as e:
             raise HTTPException(
                 status_code=e.response.status_code,

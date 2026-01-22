@@ -22,20 +22,18 @@ class SchoolClient:
         start: int = 0, limit: int = 100
     ) -> List[SchoolDTO]:
         url = f"{base_url}/schools?start={start}&limit={limit}"
-        async with SchoolClient._client as client:
-            response = await client.get(url)
-            response.raise_for_status()
-            data = response.json()
-            return [SchoolDTO(**school) for school in data]
+        response = await SchoolClient._client.get(url)
+        response.raise_for_status()
+        data = await response.json()
+        return [SchoolDTO(**school) for school in data]
 
     @staticmethod
     async def fetch_school_by_id(cod_school: str) -> SchoolDTO:
         url = f"{base_url}/schools/{cod_school}"
-        async with SchoolClient._client as client:
-            response = await client.get(url)
-            response.raise_for_status()
-            data = response.json()
-            return SchoolDTO(**data)
+        response = await SchoolClient._client.get(url)
+        response.raise_for_status()
+        data = await response.json()
+        return SchoolDTO(**data)
 
     @staticmethod
     async def fetch_email_list_of_school(
@@ -46,11 +44,9 @@ class SchoolClient:
             f"{base_url}/schools/get-email-list/"
             f"{cod_school}/{cod_period}"
         )
-        async with httpx.AsyncClient(timeout=httpx.Timeout(30.0)) as client:
-            response = await client.get(url)
-            response.raise_for_status()
-            data = response.json()
-            print(data)
-            return [EmailDTO(
+        response = await SchoolClient._client.get(url)
+        response.raise_for_status()
+        data = await response.json()
+        return [EmailDTO(
                     email=email[0], role=email[1]
                     ) for email in data]

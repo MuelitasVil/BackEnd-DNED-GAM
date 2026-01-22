@@ -26,11 +26,12 @@ class SchoolHeadquartersAssociateClient:
             f"{base_url}/school_headquarters_associates"
             f"?start={start}&limit={limit}"
         )
-        async with SchoolHeadquartersAssociateClient._client as client:
-            response = await client.get(url, follow_redirects=True)
-            response.raise_for_status()
-            data = response.json()
-            return [sch(**assoc) for assoc in data]
+        response = await SchoolHeadquartersAssociateClient._client.get(
+            url, follow_redirects=True
+        )
+        response.raise_for_status()
+        data = await response.json()
+        return [sch(**assoc) for assoc in data]
 
     @staticmethod
     async def fetch_association_by_id(
@@ -43,12 +44,10 @@ class SchoolHeadquartersAssociateClient:
             f"{cod_school}/{cod_headquarters}/{cod_period}"
         )
         print(url)
-        async with SchoolHeadquartersAssociateClient._client as client:
-            response = await client.get(url)
-            response.raise_for_status()
-            data = response.json()
-            print(data)
-            return sch(**data)
+        response = await SchoolHeadquartersAssociateClient._client.get(url)
+        response.raise_for_status()
+        data = response.json()
+        return sch(**data)
 
     @staticmethod
     async def fetch_associations_by_headquarters(
@@ -59,8 +58,9 @@ class SchoolHeadquartersAssociateClient:
             f"{base_url}/school_headquarters_associates/"
             f"by-headquarters/{cod_headquarters}/{period}"
         )
-        async with SchoolHeadquartersAssociateClient._client as client:
-            response = await client.get(url, follow_redirects=True)
-            response.raise_for_status()
-            data = response.json()
-            return [sch(**assoc) for assoc in data]
+        response = await SchoolHeadquartersAssociateClient._client.get(
+            url, follow_redirects=True
+        )
+        response.raise_for_status()
+        data = response.json()
+        return [sch(**assoc) for assoc in data]

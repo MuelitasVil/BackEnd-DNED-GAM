@@ -27,11 +27,12 @@ class UnitSchoolAssociateClient:
             f"{base_url}/unit_school_associates"
             f"?start={start}&limit={limit}"
         )
-        async with UnitSchoolAssociateClient._client as client:
-            response = await client.get(url, follow_redirects=True)
-            response.raise_for_status()
-            data = response.json()
-            return [UnitSchoolAssociateDTO(**assoc) for assoc in data]
+        response = await UnitSchoolAssociateClient._client.get(
+            url, follow_redirects=True
+        )
+        response.raise_for_status()
+        data = await response.json()
+        return [UnitSchoolAssociateDTO(**assoc) for assoc in data]
 
     @staticmethod
     async def fetch_association_by_id(
@@ -41,11 +42,10 @@ class UnitSchoolAssociateClient:
             f"{base_url}/unit_school_associates"
             f"/{cod_unit}/{cod_school}/{cod_period}"
         )
-        async with UnitSchoolAssociateClient._client as client:
-            response = await client.get(url)
-            response.raise_for_status()
-            data = response.json()
-            return UnitSchoolAssociateDTO(**data)
+        response = await UnitSchoolAssociateClient._client.get(url)
+        response.raise_for_status()
+        data = await response.json()
+        return UnitSchoolAssociateDTO(**data)
 
     @staticmethod
     async def fetch_associations_by_school(
@@ -56,8 +56,9 @@ class UnitSchoolAssociateClient:
             f"{base_url}/unit_school_associates/"
             f"by-school/{cod_school}/{period}"
         )
-        async with UnitSchoolAssociateClient._client as client:
-            response = await client.get(url, follow_redirects=True)
-            response.raise_for_status()
-            data = response.json()
-            return [UnitSchoolAssociateDTO(**assoc) for assoc in data]
+        response = await UnitSchoolAssociateClient._client.get(
+            url, follow_redirects=True
+        )
+        response.raise_for_status()
+        data = await response.json()
+        return [UnitSchoolAssociateDTO(**assoc) for assoc in data]

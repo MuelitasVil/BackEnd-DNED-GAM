@@ -51,4 +51,6 @@ class UnitUnalClient:
         url = f"{base_url}/units_unal/get-email-list/{cod_unit}/{period}"
         response = await UnitUnalClient._client.get(url)
         response.raise_for_status()
-        return [...]
+        data = response.json()
+        # todo: change response en organization ms.
+        return [EmailDTO(email=item[0], role=item[1]) for item in data]

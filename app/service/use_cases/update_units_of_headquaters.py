@@ -33,7 +33,7 @@ from app.service.gam.gam_group_service import (
 )
 
 logger = AppLogger(__file__, "update_unis_of_headquaters.log")
-semaphore = asyncio.Semaphore(10)
+semaphore = asyncio.Semaphore(20)
 
 
 async def update_units_of_headquarters(name: str, period: str) -> None:
@@ -77,16 +77,14 @@ async def update_units_of_headquarters(name: str, period: str) -> None:
     units_email_senders = await _get_email_senders_by_units(
         unit_in_schools, period
     )
+    
     _loggerEmailsByUnits(units_email_senders)
 
-    '''
-    todo: uncooment before de validations
     for unit_email_sender in units_email_senders:
         await GamGroupService.update_group(
             unit_email_sender,
             units_email_senders[unit_email_sender]
         )
-    '''
 
     return {
             "detail": f"Update of units for headquarters "
@@ -114,20 +112,28 @@ async def _fetch_schools_for_headquarter(
     hq: HeadquartersDTO,
     period: str,
 ) -> List[schClientDTO]:
-    try:
-        temp_schools: List[schClientDTO] = await (
-            SchHqClient.fetch_associations_by_headquarters(
-                cod_headquarters=hq.cod_headquarters,
-                period=period,
+    async with semaphore:
+        try:
+            temp_schools: List[schClientDTO] = await (
+                SchHqClient.fetch_associations_by_headquarters(
+                    cod_headquarters=hq.cod_headquarters,
+                    period=period,
+                )
             )
-        )
-        return temp_schools
-    except Exception as e:
-        logger.error(
-            f"Failed fetching associations for headquarters"
-            f"  {hq.cod_headquarters}: {e}"
+            return temp_schools
+        except httpx.HTTPStatusError as e:
+            logger.error(
+                f"HTTP {e.response.status_code} "
+                f"for headquarters {hq.cod_headquarters}"
+                f"error: {e}"
             )
-        return []
+            return []
+        except Exception as e:
+            logger.error(
+                f"Failed fetching associations for headquarters"
+                f"  {hq.cod_headquarters}: {e}"
+            )
+            return []
 
 
 async def _get_units_in_schools(
@@ -148,19 +154,27 @@ async def _get_units_in_schools(
 async def fetch_units_for_school(
         sch: schClientDTO, period: str
 ) -> List[unitSchoolDTO]:
-    try:
-        temp_units: List[unitSchoolDTO] = await (
-            UnitSchClient.fetch_associations_by_school(
-                cod_school=sch.cod_school,
-                period=period,
+    async with semaphore:
+        try:
+            temp_units: List[unitSchoolDTO] = await (
+                UnitSchClient.fetch_associations_by_school(
+                    cod_school=sch.cod_school,
+                    period=period,
+                )
             )
-        )
-        return temp_units
-    except Exception as e:
-        logger.error(
-            f"Failed fetching associations for school"
-            f" {sch.cod_school}: {e}")
-        return []
+            return temp_units
+        except httpx.HTTPStatusError as e:
+            logger.error(
+                f"HTTP {e.response.status_code} "
+                f"for school {sch.cod_school}"
+                f"error: {e}"
+            )
+            return []
+        except Exception as e:
+            logger.error(
+                f"Failed fetching associations for school"
+                f" {sch.cod_school}: {e}")
+            return []
 
 
 async def _get_email_senders_by_units(

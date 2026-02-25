@@ -7,4 +7,4 @@ class HeadquartersDTO(BaseModel):
     email: str
     name: str
     description: Optional[str] = None
-    type_facultad: str
+    general_code: str

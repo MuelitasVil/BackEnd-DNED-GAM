@@ -7,4 +7,4 @@ class SchoolDTO(BaseModel):
     email: Optional[str]
     name: Optional[str]
     description: Optional[str]
-    type_facultad: Optional[str]
+    general_code: Optional[str]

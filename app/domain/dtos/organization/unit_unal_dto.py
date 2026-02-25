@@ -7,4 +7,4 @@ class UnitUnalDTO(BaseModel):
     email: Optional[str]
     name: Optional[str]
     description: Optional[str]
-    type_unit: Optional[str]
+    type_user: Optional[str]

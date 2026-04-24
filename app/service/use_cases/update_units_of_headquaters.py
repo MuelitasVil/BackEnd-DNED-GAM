@@ -3,7 +3,6 @@ from typing import List
 
 import httpx
 from app.utils.app_logger import AppLogger
-from fastapi import BackgroundTasks
 
 from app.domain.dtos.organization.headquarters_dto import HeadquartersDTO
 from app.domain.dtos.organization.school_headquarters_associate_dto import (
@@ -37,9 +36,6 @@ semaphore = asyncio.Semaphore(20)
 
 
 async def update_units_of_headquarters(name: str, period: str) -> None:
-    # todo: try to use background tasks
-    background_tasks: BackgroundTasks = BackgroundTasks()
-
     headquarters: List[HeadquartersDTO] = await (
         HqClient.fetch_headquarters_by_name(name)
     )
@@ -77,14 +73,11 @@ async def update_units_of_headquarters(name: str, period: str) -> None:
     units_email_senders = await _get_email_senders_by_units(
         unit_in_schools, period
     )
-    
+
     _loggerEmailsByUnits(units_email_senders)
 
-    for unit_email_sender in units_email_senders:
-        await GamGroupService.update_group(
-            unit_email_sender,
-            units_email_senders[unit_email_sender]
-        )
+    await _delete_all_groups(units_email_senders)
+    await _create_all_groups(units_email_senders)
 
     return {
             "detail": f"Update of units for headquarters "
@@ -220,6 +213,50 @@ async def fetch_emails_for_unit(
                 f"error: {e}"
             )
             return []
+
+
+async def _delete_all_groups(
+    units_email_senders: dict[str, List[Email]]
+) -> None:
+    logger.info("Delete phase started")
+
+    tasks = [
+        asyncio.to_thread(GamGroupService.delete_group, cod_unit)
+        for cod_unit in units_email_senders.keys()
+    ]
+
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+
+    failed = 0
+    for cod_unit, result in zip(units_email_senders.keys(), results):
+        if isinstance(result, Exception):
+            failed += 1
+            logger.error(
+                f"Unexpected error deleting group {cod_unit}: {result}"
+            )
+            continue
+        if result is False:
+            failed += 1
+
+    logger.info(
+        f"Delete phase completed."
+        f" total={len(units_email_senders)}, failed={failed}"
+    )
+
+
+async def _create_all_groups(
+    units_email_senders: dict[str, List[Email]]
+) -> None:
+    logger.info("Create phase started")
+
+    tasks = [
+        GamGroupService.update_group(cod_unit, emails)
+        for cod_unit, emails in units_email_senders.items()
+    ]
+
+    await asyncio.gather(*tasks, return_exceptions=True)
+
+    logger.info(f"Create phase completed. total={len(units_email_senders)}")
 
 
 def _loggerHeadQuarters(headquarters: List[HeadquartersDTO]) -> None:

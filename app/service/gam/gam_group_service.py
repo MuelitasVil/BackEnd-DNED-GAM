@@ -87,12 +87,12 @@ class GamGroupService:
 
     @staticmethod
     async def update_group(group_email: str, users: List[Email]) -> None:
-        try:
-            GamGroupService.delete_group(group_email)
-        except Exception as e:
-            logger.error(f"Connection: {e}")
+        group_created = await asyncio.to_thread(
+            GamGroupService.create_group,
+            group_email
+        )
 
-        if not GamGroupService.create_group(group_email):
+        if not group_created:
             logger.error(f"Failed to create group {group_email}.")
             return
 

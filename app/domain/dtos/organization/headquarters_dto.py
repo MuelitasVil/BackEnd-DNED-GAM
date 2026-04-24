@@ -8,3 +8,4 @@ class HeadquartersDTO(BaseModel):
     name: str
     description: Optional[str] = None
     general_code: str
+    type_user: str

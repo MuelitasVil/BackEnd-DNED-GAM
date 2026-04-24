@@ -215,7 +215,7 @@ async def fetch_emails_for_unit(
             )
             return []
         except Exception as e:
-            logger.exception(
+            logger.error(
                 f"Unexpected error for unit {unit.cod_unit}"
                 f"error: {e}"
             )

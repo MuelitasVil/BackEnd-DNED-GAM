@@ -8,6 +8,11 @@ class Settings(BaseSettings):
     )
 
     DNED_ORGANIZATION: str
+    JOBS_DB_HOST: str
+    JOBS_DB_PORT: str
+    JOBS_DB_USER: str
+    JOBS_DB_PASSWORD: str
+    JOBS_DB_NAME: str
 
 
 # Instantiate the settings

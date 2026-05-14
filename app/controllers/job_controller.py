@@ -26,10 +26,16 @@ router = APIRouter(prefix="/jobs", tags=["Jobs"])
 
 
 def _build_job_response(job) -> JobResponse:
+    status = (
+        job.status.value
+        if hasattr(job.status, "value")
+        else job.status
+    )
+
     return JobResponse(
         id=job.id,
         process_type=job.process_type,
-        status=job.status.value if hasattr(job.status, "value") else job.status,
+        status=status,
         params=job.params,
         requested_by=job.requested_by,
         origin=job.origin,
@@ -72,7 +78,9 @@ def _run_job_in_background(job_id: str, payload: JobCreateRequest) -> None:
             )
 
             with Session(engine) as session:
-                JobService.mark_succeeded(session, job_id, job_result, progress)
+                JobService.mark_succeeded(
+                    session, job_id, job_result, progress
+                )
             return
 
         raise ValueError(f"Unsupported process_type: {payload.process_type}")

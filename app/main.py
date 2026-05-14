@@ -1,11 +1,12 @@
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from app.controllers import test_controller
 from app.controllers import csv_gam_files_controllers
 from app.controllers import gam_user_controller
 from app.controllers import gam_group_controller
 from app.controllers import job_controller
+from app.utils.auth import get_current_user
 
-app = FastAPI()
+app = FastAPI(dependencies=[Depends(get_current_user)])
 
 
 @app.get("/")

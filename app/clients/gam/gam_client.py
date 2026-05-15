@@ -2,6 +2,7 @@ import subprocess
 
 from fastapi import HTTPException
 from app.utils.app_logger import AppLogger
+from app.domain.enums.gam_command_enum import GamCommandEnum
 
 logger = AppLogger(__file__, "gam_client.log")
 
@@ -27,7 +28,7 @@ class GamClient:
     @staticmethod
     def test_connection() -> bool:
         """Verifica la conexión con GAM ejecutando el comando 'gam version'"""
-        command = ['gam', 'version']
+        command = [GamCommandEnum.GAM.value, GamCommandEnum.VERSION.value]
         result = GamClient.call_gam_command(command)
         if result.returncode == 0:
             logger.info("GAM connection is successful.")

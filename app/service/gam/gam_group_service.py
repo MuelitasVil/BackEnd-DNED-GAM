@@ -2,6 +2,8 @@ import asyncio
 from typing import List
 from app.utils.app_logger import AppLogger
 from app.clients.gam.gam_client import GamClient
+from app.domain.enums.gam_command_enum import GamCommandEnum
+from app.domain.enums.gam_attribute_enum import GamAttributeEnum
 from app.domain.dtos.organization.email_dto import (
     EmailDTO as Email,
 )
@@ -13,11 +15,18 @@ class GamGroupService:
     @staticmethod
     def create_group(group_email: str) -> bool:
         command = [
-            'gam', 'create', 'group', group_email,
-            'allowExternalMembers', 'false',
-            'whoCanJoin', 'CAN_REQUEST_TO_JOIN',
-            'whoCanViewGroup', 'ALL_MANAGERS_CAN_VIEW',
-            'whoCanPostMessage', 'ALL_MANAGERS_CAN_POST'
+            GamCommandEnum.GAM.value,
+            GamCommandEnum.CREATE.value,
+            GamCommandEnum.GROUP.value,
+            group_email,
+            GamAttributeEnum.ALLOW_EXTERNAL_MEMBERS.value,
+            GamAttributeEnum.FALSE.value,
+            GamAttributeEnum.WHO_CAN_JOIN.value,
+            GamAttributeEnum.CAN_REQUEST_TO_JOIN.value,
+            GamAttributeEnum.WHO_CAN_VIEW_GROUP.value,
+            GamAttributeEnum.ALL_MANAGERS_CAN_VIEW.value,
+            GamAttributeEnum.WHO_CAN_POST_MESSAGE.value,
+            GamAttributeEnum.ALL_MANAGERS_CAN_POST.value,
         ]
 
         result = GamClient.call_gam_command(command)
@@ -34,7 +43,12 @@ class GamGroupService:
     @staticmethod
     def delete_group(group_email: str) -> bool:
         """Elimina un grupo utilizando GAM, dado su correo electrónico"""
-        command = ['gam', 'delete', 'group', group_email]
+        command = [
+            GamCommandEnum.GAM.value,
+            GamCommandEnum.DELETE.value,
+            GamCommandEnum.GROUP.value,
+            group_email,
+        ]
         result = GamClient.call_gam_command(command)
         if result.returncode == 0:
             logger.info(f"Group {group_email} deleted successfully.")
@@ -49,8 +63,13 @@ class GamGroupService:
     ) -> bool:
         """Agrega un usuario a un grupo utilizando GAM"""
         command = [
-            'gam', 'update', 'group', group_email,
-            'add', 'owner', user_email
+            GamCommandEnum.GAM.value,
+            GamCommandEnum.UPDATE.value,
+            GamCommandEnum.GROUP.value,
+            group_email,
+            GamCommandEnum.ADD.value,
+            GamAttributeEnum.OWNER.value,
+            user_email,
             ]
         result = GamClient.call_gam_command(command)
         if result.returncode == 0:
@@ -70,8 +89,13 @@ class GamGroupService:
     ) -> bool:
         """Agrega un usuario a un grupo utilizando GAM"""
         command = [
-            'gam', 'update', 'group', group_email,
-            'add', 'member', user_email
+            GamCommandEnum.GAM.value,
+            GamCommandEnum.UPDATE.value,
+            GamCommandEnum.GROUP.value,
+            group_email,
+            GamCommandEnum.ADD.value,
+            GamAttributeEnum.MEMBER.value,
+            user_email,
             ]
         result = GamClient.call_gam_command(command)
         if result.returncode == 0:

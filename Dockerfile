@@ -66,9 +66,12 @@ WORKDIR /app
 # Crear .dockerignore antes de construir para excluir secretos y entornos locales.
 COPY app/ ./
 
+RUN mkdir -p /app/logs \
+    && chown -R appuser:appuser /app/logs
+
 USER appuser
 EXPOSE 8000
 
 # La autorizacion de GAM se realiza en ejecucion usando un volumen persistente.
 # No ejecutar `gam create project` ni `gam oauth create` durante el build.
-CMD ["/opt/api-venv/bin/python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
+CMD ["fastapi", "dev", "main.py", "--host", "0.0.0.0", "--port", "8000"]
